@@ -1,44 +1,5 @@
 class Scraper
-  URL = "https://booking.stockholm.se/SearchScheme/AdvancedSearch.aspx"
-
-  def initialize
-    @browser = Ferrum::Browser.new(headless: true)
-  end
-
-  def cleanup
-    @browser.quit
-  end
-
-  def self.search_week(dates)
-    scraper = new
-    return dates.map { |date| scraper.search_week(date:) }
-  ensure
-    scraper.cleanup
-  end
-
-  def search_week(date:)
-    monday = Date.parse(date).monday
-
-    times = [%w[1800 1900], %w[1900 2000], %w[2000 2100]]
-
-    (0..4)
-      .filter_map do |i|
-        date = monday + i.days
-        result = {}
-        times.each do |start_at, end_at|
-          search_results =
-            search(date: date, start_at: start_at, end_at: end_at)
-          result[
-            "#{start_at}-#{end_at}"
-          ] = search_results if search_results.any?
-        end
-
-        [date, result] if result.any?
-      end
-      .to_h
-  end
-
-  def self.search_week2(week_number:)
+  def self.search_week(week_number:, district: "CITY", activity: "INNE")
     week_numbers = Array(week_number)
     mondays =
       week_numbers.map do |week_number|
@@ -60,7 +21,9 @@ class Scraper
             search_url(
               date: monday + i.days,
               start_at: start_at,
-              end_at: end_at
+              end_at: end_at,
+              district: district,
+              activity: activity
             )
           end
         end
@@ -80,13 +43,12 @@ class Scraper
     results
   end
 
-  def self.search_url(date:, start_at:, end_at:)
-    # https://booking.stockholm.se/SearchScheme/Search_Scheme_Result.aspx?Activity=INNE&District=CITY&Start=1900&End=2000&Number=&Date=2024-01-08&DateTom=2024-01-15&SchemeType=0&ReqHits=&DayOfWeeks=1@2@3@4@5@6@7&FirstAvailable=False
+  def self.search_url(date:, start_at:, end_at:, district:, activity:)
     url = "https://booking.stockholm.se/SearchScheme/Search_Scheme_Result.aspx"
     url = URI.parse(url)
     query = (url.query ? CGI.parse(url.query) : {})
-    query["Activity"] = "INNE"
-    query["District"] = "Nordost"
+    query["Activity"] = activity
+    query["District"] = district
     query["Start"] = start_at
     query["End"] = end_at
     query["Number"] = ""
@@ -96,10 +58,5 @@ class Scraper
 
     url.query = URI.encode_www_form(query)
     url.to_s
-  end
-
-  def search(date:, start_at:, end_at:)
-    @browser.goto(search_url(date:, start_at:, end_at:))
-    @browser.css(".gridrow").map { |row| row.at_css("td").inner_text }
   end
 end
