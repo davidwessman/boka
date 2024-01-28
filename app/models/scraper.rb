@@ -31,7 +31,8 @@ class Scraper
 
     results = {}
     SearchScraper.run(start_urls: urls, headless: false) do |parsed|
-      locations = parsed[:locations] - skip_locations
+      # locations = parsed[:locations] - skip_locations
+      locations = parsed[:locations]
       next unless locations.any?
 
       date = "#{parsed[:date]} #{parsed[:weekday]}"
