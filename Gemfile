@@ -43,6 +43,7 @@ gem "bootsnap", require: false
 
 gem "solid_queue", "~> 0.2.1"
 gem "vessel", "~> 0.2.0"
+gem "mission_control-jobs", "~> 0.1.1"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
