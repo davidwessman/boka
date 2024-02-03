@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: Gustav Vasa Skola
+  subtitle: Gymnastik nedre
+  address: Karlbergsvägen 34
+  postal_code: 113 27
+  city: STOCKHOLM
+  district: CITY
+  facility_id: GA21
+  facility_object_id: 920

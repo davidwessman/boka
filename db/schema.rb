@@ -10,7 +10,34 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_03_110149) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_03_164628) do
+  create_table "locations", force: :cascade do |t|
+    t.string "title"
+    t.string "subtitle"
+    t.string "address"
+    t.string "postal_code"
+    t.string "city"
+    t.string "district"
+    t.string "facility_id", null: false
+    t.string "facility_object_id", null: false
+    t.datetime "scraped_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["facility_id", "facility_object_id"], name: "index_locations_on_facility_id_and_facility_object_id", unique: true
+  end
+
+  create_table "slots", force: :cascade do |t|
+    t.datetime "start_at", null: false
+    t.datetime "end_at", null: false
+    t.integer "location_id", null: false
+    t.integer "week_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["location_id", "start_at", "end_at"], name: "index_slots_on_location_id_and_start_at_and_end_at", unique: true
+    t.index ["location_id"], name: "index_slots_on_location_id"
+    t.index ["week_id"], name: "index_slots_on_week_id"
+  end
+
   create_table "solid_queue_blocked_executions", force: :cascade do |t|
     t.integer "job_id", null: false
     t.string "queue_name", null: false
@@ -105,6 +132,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_03_110149) do
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
   end
 
+  create_table "weeks", force: :cascade do |t|
+    t.integer "number"
+    t.datetime "scraped_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "slots", "locations"
+  add_foreign_key "slots", "weeks"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
