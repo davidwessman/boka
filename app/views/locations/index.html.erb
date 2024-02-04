@@ -1,19 +1,16 @@
-<main class="grid grid-cols-1 gap-6 p-6">
-  <h1 class="font-bold text-2xl">Innebandy Stockholm</h1>
-  <% @locations.each do |location| %>
-    <div class="pl-3">
-      <h2 class="font-bold text-lg">
-        <%= location.title %>
-        <%= location.subtitle %>
-      </h2>
-      <ul class="list-disc list-inside">
-        <li>
-          <%= link_to(location.full_facility_id, location.url, target: :_blank) %>
-        </li>
-        <li>
-          <%= location.full_address %>
-        </li>
-      </ul>
-    </div>
-  <% end %>
-</main>
+<% @locations.each do |location| %>
+  <div class="pl-3">
+    <h2 class="font-bold text-lg">
+      <%= location.title %>
+      <%= location.subtitle %>
+    </h2>
+    <ul class="list-disc list-inside">
+      <li>
+        <%= link_to(location.full_facility_id, location.url, target: :_blank) %>
+      </li>
+      <li>
+        <%= location.full_address %>
+      </li>
+    </ul>
+  </div>
+<% end %>

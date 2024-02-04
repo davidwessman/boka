@@ -1,0 +1,36 @@
+<div class="pl-3">
+  <h2 class="font-bold text-lg">
+    <%= @location.title %>
+    <%= @location.subtitle %>
+  </h2>
+
+  <ul class="list-disc list-inside mb-2">
+    <li>
+      <%= link_to(@location.full_facility_id, @location.url, target: :_blank) %>
+    </li>
+    <li>
+      <%= @location.full_address %>
+    </li>
+  </ul>
+
+  <h3 class="font-bold mb-2">Time slots</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th class="border border-gray-700 p-1">Date</th>
+        <th class="border border-gray-700 p-1">Weekday</th>
+        <th class="border border-gray-700 p-1">Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @slots.each do |slot| %>
+        <tr>
+          <td class="border border-gray-500 p-1"><%= slot.start_at.strftime('%Y-%m-%d') %></td>
+          <td class="border border-gray-500 p-1"><%= slot.start_at.strftime('%A') %></td>
+          <td class="border border-gray-500 p-1"><%= slot.start_at.strftime('%H:%M') %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

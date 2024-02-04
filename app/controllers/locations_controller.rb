@@ -5,5 +5,6 @@ class LocationsController < ApplicationController
 
   def show
     @location = Location.find(params[:id])
+    @slots = @location.slots.future.order(:start_at)
   end
 end

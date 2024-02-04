@@ -7,5 +7,6 @@ Rails.application.routes.draw do
   mount MissionControl::Jobs::Engine, at: "/jobs"
 
   resources(:locations, only: %i[index show])
+  resources(:weeks, only: %i[update])
   root(controller: :presentations, action: :index)
 end

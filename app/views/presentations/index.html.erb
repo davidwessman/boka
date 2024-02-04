@@ -1,24 +1,36 @@
-<main class="grid grid-cols-1 gap-6 p-6">
-  <h1 class="font-bold text-2xl">Innebandy Stockholm week <%= @week.number %></h1>
+<% content_for(:title) { "Week #{@week.number}" }%>
+<div class="flex gap-x-2">
+  <%= link_to("Previous week", {week: @week.number - 1}, class: "btn btn-blue") %>
   <%= link_to("Next week", {week: @week.number + 1}, class: "btn btn-blue") %>
-  <% if @week.scraped_at.nil? %>
-    Searching for slots
-  <% end %>
+</div>
 
-  <% @slots_by_start_at.each do |start_at, slots| %>
-    <div class="pl-3">
-      <h2 class="font-bold text-lg"><%= start_at.to_date %> <%= start_at.strftime("%A - %H:%M") %></h2>
-      <ul class="list-disc list-inside">
-        <% slots.each do |slot| %>
-          <li>
-            <%= link_to(
-              slot.location.title,
-              location_path(slot.location),
-              class: "link"
-            ) %>
-          </li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-</main>
+<% if @week.scraped_at.nil? %>
+  Searching for slots
+<% else %>
+  <div class="flex items-center gap-x-2">
+    <div>Last scraped <%= distance_of_time_in_words(Time.current - @week.scraped_at) %> ago</div>
+    <%= button_to(
+      "Refresh",
+      week_path(@week),
+      method: :patch,
+      class: "btn btn-sm btn-gray"
+    ) %>
+  </div>
+<% end %>
+
+<% @slots_by_start_at.each do |start_at, slots| %>
+  <div class="pl-3">
+    <h2 class="font-bold text-lg"><%= start_at.to_date %> <%= start_at.strftime("%A - %H:%M") %></h2>
+    <ul class="list-disc list-inside">
+      <% slots.each do |slot| %>
+        <li>
+          <%= link_to(
+            slot.location.title,
+            location_path(slot.location),
+            class: "link"
+          ) %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
